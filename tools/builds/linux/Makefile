@@ -30,17 +30,17 @@
 all: clean check build testing deproy
 
 clean:
-	bash 00-clear.sh
+	sh 00-clear.sh
 
 check:
-	bash 01-static_check.sh
+	sh 01-static_check.sh
 
 build: check
-	bash 02-build.sh ${TARGET}
+	sh 02-build.sh ${TARGET}
 
 testing: build
-	bash 03-testing.sh
+	sh 03-testing.sh
 
 deproy: build
-	bash 04-deproy.sh
+	sh 04-deproy.sh
 

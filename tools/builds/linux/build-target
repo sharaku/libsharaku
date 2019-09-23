@@ -1,12 +1,8 @@
-# -
-
-BUILD_TARGET=(
-	"libs/atomic"
-	"libs/container"
-	"libs/pool"
-	"libs/type"
-	"libs/lock"
-	"libs/debug"
-	"libs/game/pzl"
-	"libs/game/wslg"
-)
+libs/atomic
+libs/container
+libs/pool
+libs/type
+libs/lock
+libs/debug
+libs/game/pzl
+libs/game/wslg

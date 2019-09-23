@@ -25,8 +25,6 @@
 #
 # ----------------------------------------------------------------------------
 
-. `dirname $0`/build-target
-
 cd `dirname $0`
 readonly OBJ_PATH=`pwd`
 readonly BASE_PATH=${OBJ_PATH}/../../../
@@ -45,7 +43,7 @@ _testing()
 	${BASE_PATH}$1 --gtest_output="xml:${DEF_RESULTPATH}/test-$(basename $1).xml"
 }
 
-for _target in "${BUILD_TARGET[@]}"
+cat ${OBJ_PATH}/build-target | while read _target
 do
 	for _gtest_exe in $(ls -1 ${BASE_PATH}${_target} |  grep '\.test$')
 	do

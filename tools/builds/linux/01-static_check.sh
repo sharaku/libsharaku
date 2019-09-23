@@ -25,7 +25,6 @@
 #
 # ----------------------------------------------------------------------------
 
-. `dirname $0`/build-target
 
 cd `dirname $0`
 readonly OBJ_PATH=`pwd`
@@ -64,7 +63,7 @@ _cppcheck()
 	fi
 }
 
-for _target in "${BUILD_TARGET[@]}"
+cat ${OBJ_PATH}/build-target | while read _target
 do
 	_cppcheck ${_target}
 done

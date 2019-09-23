@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # ----------------------------------------------------------------------------
 #
 #  MIT License
@@ -24,8 +24,6 @@
 #  SOFTWARE. *
 #
 # ----------------------------------------------------------------------------
-
-. `dirname $0`/build-target
 
 cd `dirname $0`
 readonly OBJ_PATH=`pwd`
@@ -65,7 +63,7 @@ _build()
 	make 2>&1 | tee ${DEF_RESULTPATH}/make.${lib_name}.${build_target}
 }
 
-for _target in "${BUILD_TARGET[@]}"
+cat ${OBJ_PATH}/build-target | while read _target
 do
 	_build ${_target} ${build_target}
 done

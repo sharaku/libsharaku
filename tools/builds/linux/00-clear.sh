@@ -25,8 +25,6 @@
 #
 # ----------------------------------------------------------------------------
 
-. `dirname $0`/build-target
-
 cd `dirname $0`
 readonly OBJ_PATH=`pwd`
 readonly BASE_PATH=${OBJ_PATH}/../../../
@@ -44,7 +42,7 @@ _clean()
 	fi
 }
 
-for _target in "${BUILD_TARGET[@]}"
+cat ${OBJ_PATH}/build-target | while read _target
 do
 	_clean ${_target}
 done
