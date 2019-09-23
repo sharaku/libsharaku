@@ -4,7 +4,7 @@ config:
     cppcheck:
       pattern: 'result/cppcheck.*.xml'
     cmake:
-      pattern: 'result/make.*'
+      pattern: 'result/cmake.*'
     gcc:
       pattern: 'result/make.*'
     junit: 'result/test-*.xml'
@@ -22,7 +22,7 @@ stage:
     docker:
       image: sharaku/cppcheck
     script:
-     - sh: make -C tools/builds/linux check
+     - sh: bash tools/builds/linux/01-static_check.sh
     result: 'result/*'
 
   x86_build:
