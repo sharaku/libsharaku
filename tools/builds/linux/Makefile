@@ -23,21 +23,24 @@
 #  SOFTWARE. *
 #
 # ----------------------------------------------------------------------------
-
+#
+# é¿çsó·
+#   make -C tools/builds/linux/ TARGET=linux-x86
+#
 all: clean check build testing deproy
 
 clean:
-	sh 00-clear.sh
+	bash 00-clear.sh
 
 check:
-	sh 01-static_check.sh
+	bash 01-static_check.sh
 
 build: check
-	sh 02-build.sh
+	bash 02-build.sh ${TARGET}
 
 testing: build
-	sh 03-testing.sh
+	bash 03-testing.sh
 
 deproy: build
-	sh 04-deproy.sh
+	bash 04-deproy.sh
 

@@ -2,13 +2,15 @@ config:
   env:
   issues:
     cppcheck:
-      pattern: 'build/linux-builds/result/cppcheck.*.xml'
+      pattern: 'result/cppcheck.*.xml'
     cmake:
-      pattern: 'build/linux-builds/result/make.*'
+      pattern: 'result/make.*'
     gcc:
-      pattern: 'build/linux-builds/result/make.*'
+      pattern: 'result/make.*'
+    junit:
+      pattern: 'result/test-*.xml'
   archiveArtifacts:
-    artifacts: 'build/linux-builds/result/*'
+    artifacts: 'result/*'
 
 
 stages:
@@ -22,7 +24,7 @@ stage:
       image: sharaku/cppcheck
     script:
      - sh: cd build/linux-builds && sh 01-static_check.sh
-    result: 'build/linux-builds/result/*'
+    result: 'result/*'
 
   x86_build:
     node: docker
@@ -30,4 +32,4 @@ stage:
       image: sharaku/cross-build
     script:
      - sh: cd build/linux-builds && sh 02-build.sh
-    result: 'build/linux-builds/result/*'
+    result: 'result/*'

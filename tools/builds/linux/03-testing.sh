@@ -25,33 +25,32 @@
 #
 # ----------------------------------------------------------------------------
 
+. `dirname $0`/build-target
+
 cd `dirname $0`
 readonly OBJ_PATH=`pwd`
-readonly DEF_LOGPATH=${OBJ_PATH}/result
-readonly BASE_PATH=${OBJ_PATH}/../../
+readonly BASE_PATH=${OBJ_PATH}/../../../
+readonly DEF_RESULTPATH=${BASE_PATH}/result
 
-mkdir -p ./result
 
-# 髱咏噪繝√ぉ繝�繧ｯ繧定｡後≧
-#  arg1		繝薙Ν繝牙ｯｾ雎｡
-do_src_cppcheck()
+# ----------------------------------------------------------------------
+# ログディレクトリ作成
+# ----------------------------------------------------------------------
+mkdir -p ${DEF_RESULTPATH}
+
+# makeを行う
+#  arg1		ビルド対象
+_testing()
 {
-	lib_path=$1
-	lib_name=`basename ${lib_path}`
-
-	if [ -d "${lib_path}/src" ]; then
-		cppcheck --enable=all --xml ${lib_path}/src 2> ${DEF_LOGPATH}/cppcheck.${lib_name}.xml
-	fi
-	if [ -d "${lib_path}/example" ]; then
-		cppcheck --enable=all --xml ${lib_path}/example 2> ${DEF_LOGPATH}/cppcheck.${lib_name}.xml
-	fi
+	${BASE_PATH}$1 --gtest_output="xml:${DEF_RESULTPATH}/test-$(basename $1).xml"
 }
 
-do_src_cppcheck ${BASE_PATH}libs/container
-do_src_cppcheck ${BASE_PATH}libs/atomic
-do_src_cppcheck ${BASE_PATH}libs/pool
-do_src_cppcheck ${BASE_PATH}libs/type
-do_src_cppcheck ${BASE_PATH}libs/lock
-do_src_cppcheck ${BASE_PATH}libs/debug
-do_src_cppcheck ${BASE_PATH}libs/game/pzl
-do_src_cppcheck ${BASE_PATH}libs/game/wslg
+for _target in "${BUILD_TARGET[@]}"
+do
+	for _gtest_exe in $(ls -1 ${BASE_PATH}${_target} |  grep '\.test$')
+	do
+		_testing ${_target}/${_gtest_exe}
+	done
+	
+done
+

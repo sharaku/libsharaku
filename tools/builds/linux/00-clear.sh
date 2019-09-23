@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # ----------------------------------------------------------------------------
 #
 #  MIT License
@@ -25,25 +25,26 @@
 #
 # ----------------------------------------------------------------------------
 
+. `dirname $0`/build-target
+
 cd `dirname $0`
 readonly OBJ_PATH=`pwd`
-readonly DEF_LOGPATH=${OBJ_PATH}/result
-readonly BASE_PATH=${OBJ_PATH}/../../
+readonly BASE_PATH=${OBJ_PATH}/../../../
+readonly DEF_RESULTPATH=${BASE_PATH}/result
+readonly DEF_DEPROYPATH=${BASE_PATH}/deproy
 
-mkdir -p ./result
-
-# makeを行う
-#  arg1		ビルド対象
-do_testing()
+_clean()
 {
-	$1
+	local lib_path=$1
+
+	if [ -f ${BASE_PATH}${lib_path}/Makefile ]; then
+		rm -rf ${DEF_RESULTPATH}
+		rm -rf ${DEF_DEPROYPATH}
+		make -C ${BASE_PATH}${lib_path} clean
+	fi
 }
 
-
-# testをビルド
-do_testing ${BASE_PATH}libs/container/sharaku.container.test
-do_testing ${BASE_PATH}libs/atomic/sharaku.atomic.test
-do_testing ${BASE_PATH}libs/pool/sharaku.pool.test
-do_testing ${BASE_PATH}libs/type/sharaku.type.test
-do_testing ${BASE_PATH}libs/lock/sharaku.lock.test
-do_testing ${BASE_PATH}libs/debug/sharaku.debug.test
+for _target in "${BUILD_TARGET[@]}"
+do
+	_clean ${_target}
+done

@@ -25,15 +25,17 @@
 #
 # ----------------------------------------------------------------------------
 
-# ---------------------------------------------------------------------------
-# デプロイ先を用意する
-# ---------------------------------------------------------------------------
+. `dirname $0`/build-target
 
 cd `dirname $0`
 readonly OBJ_PATH=`pwd`
-readonly DEF_DEPROYPATH=${OBJ_PATH}/deproy
-readonly BASE_PATH=${OBJ_PATH}/../../
+readonly BASE_PATH=${OBJ_PATH}/../../../
+readonly DEF_RESULTPATH=${BASE_PATH}/result
+readonly DEF_DEPROYPATH=${BASE_PATH}/deproy
 
+# ---------------------------------------------------------------------------
+# デプロイ先を用意する
+# ---------------------------------------------------------------------------
 rm -rf ${DEF_DEPROYPATH}
 mkdir -p ${DEF_DEPROYPATH}/
 mkdir -p ${DEF_DEPROYPATH}/include/libsharaku
@@ -45,29 +47,25 @@ mkdir -p ${DEF_DEPROYPATH}/bin/libgame
 
 # makeを行う
 #  arg1		ビルド対象
-do_copy()
+_copy()
 {
 	lib_path=$1
-	cp -pR ${lib_path}/include ${DEF_DEPROYPATH}
+	cp -pR ${BASE_PATH}${lib_path}/include ${DEF_DEPROYPATH}
 }
 
 
 # ---------------------------------------------------------------------------
 # コピーする
 # ---------------------------------------------------------------------------
-do_copy ${BASE_PATH}/libs/container
-do_copy ${BASE_PATH}/libs/atomic
-do_copy ${BASE_PATH}/libs/pool
-do_copy ${BASE_PATH}/libs/type
-do_copy ${BASE_PATH}/libs/lock
-do_copy ${BASE_PATH}/libs/debug
-do_copy ${BASE_PATH}/libs/game/pzl
-do_copy ${BASE_PATH}/libs/game/wslg
+for _target in "${BUILD_TARGET[@]}"
+do
+	_copy ${_target}
+done
 
-cp -pR ${BASE_PATH}/libs/pool/libsharaku.pool.linux.x86.a ${DEF_DEPROYPATH}/lib/libsharaku/
-cp -pR ${BASE_PATH}/libs/debug/libsharaku.debug.linux.x86.a ${DEF_DEPROYPATH}/lib/libsharaku/
-cp -pR ${BASE_PATH}/libs/game/pzl/libgame.pzl.linux.x86.a ${DEF_DEPROYPATH}/lib/libgame/
-cp -pR ${BASE_PATH}/libs/game/wslg/libgame.wslg.linux.x86.a ${DEF_DEPROYPATH}/lib/libgame/
+cp -pR ${BASE_PATH}/libs/pool/libsharaku.pool.*.a ${DEF_DEPROYPATH}/lib/libsharaku/
+cp -pR ${BASE_PATH}/libs/debug/libsharaku.debug.*.a ${DEF_DEPROYPATH}/lib/libsharaku/
+cp -pR ${BASE_PATH}/libs/game/pzl/libgame.pzl.*.a ${DEF_DEPROYPATH}/lib/libgame/
+cp -pR ${BASE_PATH}/libs/game/wslg/libgame.wslg.*.a ${DEF_DEPROYPATH}/lib/libgame/
 
 cp -pR ${BASE_PATH}/libs/debug/logvewer ${DEF_DEPROYPATH}/bin/libsharaku/
 
