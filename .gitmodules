@@ -19,3 +19,6 @@
 [submodule "libs/game"]
 	path = libs/game
 	url = https://github.com/sharaku/game.git
+[submodule "tools/jenkins-ci"]
+	path = tools/jenkins-ci
+	url = https://github.com/sharaku/sharaku-jenkins-ci.git
