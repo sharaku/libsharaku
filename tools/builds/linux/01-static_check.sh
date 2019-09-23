@@ -60,7 +60,7 @@ _cppcheck()
 		     \( -name \*.c -or -name \*.h -or -name \*.cpp -or -name \*.hpp \) | \
 		while read _target_file
 		do
-			cppcheck --enable=all --xml --std=c++11 --xml-version=2 ${_INCLUDE_FLAGS} ${_target_file} 2> ${DEF_RESULTPATH}/cppcheck.${lib_name}.$(basename ${_target_file}).src.xml
+			cppcheck --enable=all --xml --std=c++11 --xml-version=2 ${_target_file} 2> ${DEF_RESULTPATH}/cppcheck.${lib_name}.$(basename ${_target_file}).src.xml
 		done
 	fi
 	if [ -d "${BASE_PATH}${lib_path}/example" ]; then
@@ -69,16 +69,10 @@ _cppcheck()
 		     \( -name \*.c -or -name \*.h -or -name \*.cpp -or -name \*.hpp \) | \
 		while read _target_file
 		do
-			cppcheck --enable=all  --xml --std=c++11 --xml-version=2 ${_INCLUDE_FLAGS} ${_target_file} 2> ${DEF_RESULTPATH}/cppcheck.${lib_name}.$(basename ${_target_file}).example.xml
+			cppcheck --enable=all  --xml --std=c++11 --xml-version=2 ${_target_file} 2> ${DEF_RESULTPATH}/cppcheck.${lib_name}.$(basename ${_target_file}).example.xml
 		done
 	fi
 }
-
-_INCLUDE_FLAGS=`cat ${OBJ_PATH}/build-target | 
-while read _target
-do
-	echo "-I ${BASE_PATH}${_target}/include"
-done`
 
 cat ${OBJ_PATH}/build-target | while read _target
 do
