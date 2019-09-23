@@ -7,8 +7,7 @@ config:
       pattern: 'result/make.*'
     gcc:
       pattern: 'result/make.*'
-    junit:
-      pattern: 'result/test-*.xml'
+    junit: 'result/test-*.xml'
   archiveArtifacts:
     artifacts: 'result/*'
 
