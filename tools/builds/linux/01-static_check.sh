@@ -47,19 +47,31 @@ _cppcheck()
 	lib_name=`basename ${lib_path}`
 
 	if [ -d "${BASE_PATH}${lib_path}/include" ]; then
+		rm -f ${DEF_RESULTPATH}/cppcheck.${lib_name}.include.xml
 		find ${BASE_PATH}${lib_path}/include \
 		     \( -name \*.c -or -name \*.h -or -name \*.cpp -or -name \*.hpp \) | \
-		xargs cppcheck --enable=all --xml 2> ${DEF_RESULTPATH}/cppcheck.${lib_name}.include.xml
+		while read _target_file
+		do
+			cppcheck --enable=all --xml ${_target_file} 2> ${DEF_RESULTPATH}/cppcheck.${lib_name}.$(basename ${_target_file}).include.xml
+		done
 	fi
 	if [ -d "${BASE_PATH}${lib_path}/src" ]; then
+		rm -f ${DEF_RESULTPATH}/cppcheck.${lib_name}.src.xml
 		find ${BASE_PATH}${lib_path}/src \
 		     \( -name \*.c -or -name \*.h -or -name \*.cpp -or -name \*.hpp \) | \
-		xargs cppcheck --enable=all --xml 2> ${DEF_RESULTPATH}/cppcheck.${lib_name}.src.xml
+		while read _target_file
+		do
+			cppcheck --enable=all --xml ${_target_file} 2> ${DEF_RESULTPATH}/cppcheck.${lib_name}.$(basename ${_target_file}).src.xml
+		done
 	fi
 	if [ -d "${BASE_PATH}${lib_path}/example" ]; then
+		rm -f ${DEF_RESULTPATH}/cppcheck.${lib_name}.example.xml
 		find ${BASE_PATH}${lib_path}/example \
 		     \( -name \*.c -or -name \*.h -or -name \*.cpp -or -name \*.hpp \) | \
-		xargs cppcheck --enable=all --xml 2> ${DEF_RESULTPATH}/cppcheck.${lib_name}.example.xml
+		while read _target_file
+		do
+			cppcheck --enable=all --xml ${_target_file} 2> ${DEF_RESULTPATH}/cppcheck.${lib_name}.$(basename ${_target_file}).example.xml
+		done
 	fi
 }
 
