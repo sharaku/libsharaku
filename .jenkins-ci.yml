@@ -23,7 +23,7 @@ stage:
     docker:
       image: sharaku/cppcheck
     script:
-     - sh: cd build/linux-builds && sh 01-static_check.sh
+     - sh: make -C tools/builds/linux check
     result: 'result/*'
 
   x86_build:
@@ -31,5 +31,5 @@ stage:
     docker:
       image: sharaku/cross-build
     script:
-     - sh: cd build/linux-builds && sh 02-build.sh
+     - sh: make -C tools/builds/linux TARGET=linux-x86
     result: 'result/*'
