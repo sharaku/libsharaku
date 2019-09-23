@@ -22,7 +22,7 @@ stage:
     docker:
       image: sharaku/cppcheck
     script:
-     - sh: bash tools/builds/linux/01-static_check.sh
+     - sh: sh tools/builds/linux/01-static_check.sh
     result: 'result/*'
 
   x86_build:
