@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # ----------------------------------------------------------------------------
 #
 #  MIT License
@@ -27,31 +27,22 @@
 
 cd `dirname $0`
 readonly OBJ_PATH=`pwd`
-readonly DEF_LOGPATH=${OBJ_PATH}/result
-readonly BASE_PATH=${OBJ_PATH}/../../
+readonly BASE_PATH=${OBJ_PATH}/../../../
+readonly DEF_RESULTPATH=${BASE_PATH}/result
+readonly DEF_DEPROYPATH=${BASE_PATH}/deproy
 
-mkdir -p ./result
-
-# 静的チェックを行う
-#  arg1		ビルド対象
-do_src_cppcheck()
+_clean()
 {
-	lib_path=$1
-	lib_name=`basename ${lib_path}`
+	local lib_path=$1
 
-	if [ -d "${lib_path}/src" ]; then
-		cppcheck --enable=all --xml ${lib_path}/src 2> ${DEF_LOGPATH}/cppcheck.${lib_name}.xml
-	fi
-	if [ -d "${lib_path}/example" ]; then
-		cppcheck --enable=all --xml ${lib_path}/example 2> ${DEF_LOGPATH}/cppcheck.${lib_name}.xml
+	if [ -f ${BASE_PATH}${lib_path}/Makefile ]; then
+		rm -rf ${DEF_RESULTPATH}
+		rm -rf ${DEF_DEPROYPATH}
+		make -C ${BASE_PATH}${lib_path} clean
 	fi
 }
 
-do_src_cppcheck ${BASE_PATH}libs/container
-do_src_cppcheck ${BASE_PATH}libs/atomic
-do_src_cppcheck ${BASE_PATH}libs/pool
-do_src_cppcheck ${BASE_PATH}libs/type
-do_src_cppcheck ${BASE_PATH}libs/lock
-do_src_cppcheck ${BASE_PATH}libs/debug
-do_src_cppcheck ${BASE_PATH}libs/game/pzl
-do_src_cppcheck ${BASE_PATH}libs/game/wslg
+cat ${OBJ_PATH}/build-target | while read _target
+do
+	_clean ${_target}
+done

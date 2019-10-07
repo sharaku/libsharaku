@@ -1,4 +1,3 @@
-#!/bin/sh
 # ----------------------------------------------------------------------------
 #
 #  MIT License
@@ -24,26 +23,24 @@
 #  SOFTWARE. *
 #
 # ----------------------------------------------------------------------------
+#
+# 実行例
+#   make -C tools/builds/linux/ TARGET=linux-x86
+#
+all: clean check build testing deproy
 
-cd `dirname $0`
-readonly OBJ_PATH=`pwd`
-readonly DEF_LOGPATH=${OBJ_PATH}/result
-readonly BASE_PATH=${OBJ_PATH}/../../
+clean:
+	sh 00-clear.sh
 
-mkdir -p ./result
+check:
+	sh 01-static_check.sh
 
-# makeを行う
-#  arg1		ビルド対象
-do_testing()
-{
-	$1
-}
+build: check
+	sh 02-build.sh ${TARGET}
 
+testing: build
+	sh 03-testing.sh
 
-# testをビルド
-do_testing ${BASE_PATH}libs/container/sharaku.container.test
-do_testing ${BASE_PATH}libs/atomic/sharaku.atomic.test
-do_testing ${BASE_PATH}libs/pool/sharaku.pool.test
-do_testing ${BASE_PATH}libs/type/sharaku.type.test
-do_testing ${BASE_PATH}libs/lock/sharaku.lock.test
-do_testing ${BASE_PATH}libs/debug/sharaku.debug.test
+deproy: build
+	sh 04-deproy.sh
+

@@ -25,24 +25,30 @@
 #
 # ----------------------------------------------------------------------------
 
-
 cd `dirname $0`
 readonly OBJ_PATH=`pwd`
-readonly DEF_LOGPATH=${OBJ_PATH}/result
-readonly DEF_DEPROYPATH=${OBJ_PATH}/deproy
-readonly BASE_PATH=${OBJ_PATH}/../../
+readonly BASE_PATH=${OBJ_PATH}/../../../
+readonly DEF_RESULTPATH=${BASE_PATH}/result
 
-rm -rf ${DEF_LOGPATH}
-rm -rf ${DEF_DEPROYPATH}
 
-if [ -f ${BASE_PATH}libs/generic/Makefile ]; then
-	# libをクリア
-	make -C ${BASE_PATH}libs/container clean
-	make -C ${BASE_PATH}libs/atomic clean
-	make -C ${BASE_PATH}libs/pool clean
-	make -C ${BASE_PATH}libs/type clean
-	make -C ${BASE_PATH}libs/lock clean
-	make -C ${BASE_PATH}libs/debug clean
-	make -C ${BASE_PATH}libs/game/pzl clean
-	make -C ${BASE_PATH}libs/game/wslg clean
-fi
+# ----------------------------------------------------------------------
+# ログディレクトリ作成
+# ----------------------------------------------------------------------
+mkdir -p ${DEF_RESULTPATH}
+
+# makeを行う
+#  arg1		ビルド対象
+_testing()
+{
+	${BASE_PATH}$1 --gtest_output="xml:${DEF_RESULTPATH}/test-$(basename $1).xml"
+}
+
+cat ${OBJ_PATH}/build-target | while read _target
+do
+	for _gtest_exe in $(ls -1 ${BASE_PATH}${_target} |  grep '\.test$')
+	do
+		_testing ${_target}/${_gtest_exe}
+	done
+	
+done
+

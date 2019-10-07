@@ -1,0 +1,34 @@
+config:
+  env:
+  issues:
+    cppcheck:
+      pattern: 'result/cppcheck.*.xml'
+    cmake:
+      pattern: 'result/cmake.*'
+    gcc:
+      pattern: 'result/make.*'
+    junit: 'result/test-*.xml'
+  archiveArtifacts:
+    artifacts: 'result/*'
+
+
+stages:
+  - cppcheck
+  - x86_build
+
+stage:
+  cppcheck:
+    node: docker
+    docker:
+      image: sharaku/cppcheck
+    script:
+     - sh: sh tools/builds/linux/01-static_check.sh
+    result: 'result/*'
+
+  x86_build:
+    node: docker
+    docker:
+      image: sharaku/cross-build
+    script:
+     - sh: make -C tools/builds/linux TARGET=linux-x86
+    result: 'result/*'

@@ -27,34 +27,44 @@
 
 cd `dirname $0`
 readonly OBJ_PATH=`pwd`
-readonly DEF_LOGPATH=${OBJ_PATH}/result
-readonly BASE_PATH=${OBJ_PATH}/../../
+readonly BASE_PATH=${OBJ_PATH}/../../../
+readonly DEF_RESULTPATH=${BASE_PATH}/result
 
-mkdir -p ./result
+build_target=$1
 
-# lib ビルドを行う
-#  arg1		ビルド対象
-#  arg2		ビルドターゲット{linux-x86}
-do_lib_build()
+# ----------------------------------------------------------------------
+# ログディレクトリ作成
+# ----------------------------------------------------------------------
+mkdir -p ${DEF_RESULTPATH}
+
+
+_build()
 {
-	lib_path=$1
-	build_target=$2
-	lib_name=`basename ${lib_path}`
+	local lib_path=$1
+	local build_target=$2
+	local lib_name=`basename ${lib_path}`
 
-	cd ${lib_path}
+	# ----------------------------------------------------------------------
+	# ビルドターゲットへ移動し、クリーンにする。
+	# ----------------------------------------------------------------------
+	cd ${BASE_PATH}${lib_path}
 	rm -f CMakeCache.txt cmake_install.cmake rm Makefile
 	rm -rf CMakeFiles
-	cmake -DCMAKE_TOOLCHAIN_FILE=${BASE_PATH}cmake/${build_target}.cmake
+
+	# ----------------------------------------------------------------------
+	# cmakeを使用してmakefileを構築する
+	# ----------------------------------------------------------------------
+	cmake -DCMAKE_TOOLCHAIN_FILE=${BASE_PATH}tools/builds/cmake/${build_target}.cmake 2>&1 | tee ${DEF_RESULTPATH}/cmake.${lib_name}.${build_target}
+
+	# ----------------------------------------------------------------------
+	# ビルドする
+	# ----------------------------------------------------------------------
 	make clean
-	make 2>&1 | tee ${DEF_LOGPATH}/make.${lib_name}.${build_target}
+	make 2>&1 | tee ${DEF_RESULTPATH}/make.${lib_name}.${build_target}
 }
 
-# libをビルド
-do_lib_build ${BASE_PATH}libs/container linux-x86
-do_lib_build ${BASE_PATH}libs/atomic linux-x86
-do_lib_build ${BASE_PATH}libs/pool linux-x86
-do_lib_build ${BASE_PATH}libs/type linux-x86
-do_lib_build ${BASE_PATH}libs/lock linux-x86
-do_lib_build ${BASE_PATH}libs/debug linux-x86
-do_lib_build ${BASE_PATH}libs/game/pzl linux-x86
-do_lib_build ${BASE_PATH}libs/game/wslg linux-x86
+cat ${OBJ_PATH}/build-target | while read _target
+do
+	_build ${_target} ${build_target}
+done
+
